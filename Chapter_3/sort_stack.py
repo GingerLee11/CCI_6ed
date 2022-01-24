@@ -81,7 +81,7 @@ class SortStack:
     def pop(self):
         return self.sorted_stack.pop()
 
-
+"""
 stack_items = SortStack()
 
 for i in range(100):
@@ -90,3 +90,4 @@ for i in range(100):
 while stack_items.is_empty() == False:
     print(stack_items.pop())
 
+"""
