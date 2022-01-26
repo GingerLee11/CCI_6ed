@@ -2,11 +2,11 @@
 # route_between_nodes.py - Given a directed graph the function finds if there is a route between the two nodes.
 
 import unittest
+from collections import deque
 
-
-def route_search(graph, start, end, checked=None):
+def DFS_route_search(graph, start, end, checked=None):
     """
-    Recursive function that searches through the graph for a route between the two given nodes.
+    Recursive depth-first search function that searches through the graph for a route between the two given nodes.
     """
     if checked is None:
         checked = set()
@@ -14,9 +14,35 @@ def route_search(graph, start, end, checked=None):
     for node in graph[start]:
         if node not in checked:
             checked.add(node)
-            if node == end or route_search(graph, node, end, checked):
+            if node == end or DFS_route_search(graph, node, end, checked):
                 return True
     return False
+
+
+def BFS_route_search(graph, start, end):
+    """
+    Iterative breadth-first search function that searches through the graph for a route between the two given nodes.
+    """
+    queue = deque()
+    checked = set()
+    queue.append(start)
+
+    while len(queue) != 0:
+        start = queue.popleft()
+
+        if start == end: 
+            return True
+        checked.add(start)
+
+        for node in graph[start]:
+            if node not in checked:
+                checked.add(node)
+                if node == end:
+                    return True
+                queue.append(node)
+
+    return False            
+
 
 
 class Test(unittest.TestCase):
@@ -56,10 +82,17 @@ class Test(unittest.TestCase):
         (16, 17, False),
     ]
 
-    def test_route_search(self):
+    def test_DFS_route_search(self):
         for [start, end, expected] in self.tests:
-            actual = route_search(self.undirected_graph_dict, start, end)
+            actual = DFS_route_search(self.undirected_graph_dict, start, end)
             assert actual == expected
+
+    def test_BFS_route_search(self):
+        for [start, end, expected] in self.tests:
+            actual = BFS_route_search(self.undirected_graph_dict, start, end)
+            print(f"{actual} vs {expected}")
+            assert actual == expected
+
 
 if __name__ == "__main__":
     unittest.main()
