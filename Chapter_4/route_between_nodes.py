@@ -15,6 +15,7 @@ def DFS_route_search(graph, start, end, checked=None):
         if node not in checked:
             checked.add(node)
             if node == end or DFS_route_search(graph, node, end, checked):
+                print(f"Route from {start} to {end} took {len(checked)} searches.")
                 return True
     return False
 
@@ -31,17 +32,17 @@ def BFS_route_search(graph, start, end):
         start = queue.popleft()
 
         if start == end: 
-            return True
-        checked.add(start)
+            return True, len(checked)
+        # checked.add(start)
 
         for node in graph[start]:
             if node not in checked:
                 checked.add(node)
                 if node == end:
-                    return True
+                    return True, len(checked)
                 queue.append(node)
 
-    return False            
+    return False, len(checked)          
 
 
 
@@ -89,10 +90,14 @@ class Test(unittest.TestCase):
 
     def test_BFS_route_search(self):
         for [start, end, expected] in self.tests:
-            actual = BFS_route_search(self.undirected_graph_dict, start, end)
-            print(f"{actual} vs {expected}")
+            actual, route_length_BFS = BFS_route_search(self.undirected_graph_dict, start, end)
+            if actual == True:
+                print(f"Route from {start} to {end} took {route_length_BFS} nodes for BFS.")
             assert actual == expected
+
+
 
 
 if __name__ == "__main__":
     unittest.main()
+
