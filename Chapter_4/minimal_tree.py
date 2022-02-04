@@ -3,36 +3,30 @@
 
 import unittest
 
-def create_minimal_tree(sorted_set):
+from math import ceil
+
+def minimal_tree(sorted_set, start, end, min_tree=None):
     """
     Takes a sorted set-like list, and creates a binary search tree with minimal height
     """
     if len(sorted_set) == 0:
         return []
+    
+    # Create minimal tree list if none
+    if min_tree == None:
+        min_tree = []
 
-    # Set the zero index (root of the tree) to the middle of the sorted set
-    n = round(len(sorted_set) / 2) - 1
-    minimal_tree = []
+    if start > end:
+        return None
 
-    # Need to check if the list has an odd or even number of integer elements
-    # If even there will be one element left over and will need to be appended
-    odd_or_even = len(sorted_set) % 2
+    mid = ceil((start + end) / 2) 
 
-    # Go through the sorted set and append one number lower and higher than the midpoint
-    # Until half the length has been iterated through (appened two numbers per iteration)
-    for i in range(0, n + 1):
-        if i == 0:
-            minimal_tree.append(sorted_set[n])
-        else:
-            minimal_tree.append(sorted_set[n-i])
-            minimal_tree.append(sorted_set[n+i])
+    min_tree.append(sorted_set[mid])
 
-    # If the sorted set is even then there will be one number remaining
-    # Which will be appended onto the end
-    if odd_or_even == 0:
-        minimal_tree.append(sorted_set[len(sorted_set) -1])
+    left = minimal_tree(sorted_set, start, mid - 1, min_tree)
+    right = minimal_tree(sorted_set, mid + 1, end, min_tree)
 
-    return minimal_tree
+    return min_tree
 
 
 class Test(unittest.TestCase):
@@ -40,18 +34,21 @@ class Test(unittest.TestCase):
     sorted_lists = [
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 40, 85, 128, 365, 444, 987],
         [],
         
     ]
     tests = [
-        [8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15],
-        [7, 6, 8, 5, 9, 4, 10, 3, 11, 2, 12, 1, 13, 14],
+        [8, 4, 2, 1, 3, 6, 5, 7, 12, 10, 9, 11, 14, 13, 15],
+        [8, 4, 2, 1, 3, 6, 5, 7, 12, 10, 9, 11, 14, 13],
+        [7, 4, 2, 1, 3, 6, 5, 11, 9, 8, 10, 13, 12],
         [],
     ]
 
-    def test_create_minimal_tree(self):
+    def test_minimal_tree(self):
         for expected, sorted_list in zip(self.tests, self.sorted_lists):
-            actual = create_minimal_tree(sorted_list)
+            actual = minimal_tree(sorted_list, 0, len(sorted_list) - 1)
             print(f"Actual:  {actual}\nExpected:{expected}\n")
             assert actual == expected
 
