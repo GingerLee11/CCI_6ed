@@ -1,8 +1,11 @@
+<<<<<<< HEAD
 # python3
 # binary_tree.py
 
 from collections import deque
 
+=======
+>>>>>>> 62e7fe04f998b2f42a5741ffcd06b13dfdacd136
 class Node:
     def __init__(self, key):
         self.key = key
@@ -34,6 +37,7 @@ class BinaryTree:
             raise Exception("A node cannot have more than two children")
         return new
 
+<<<<<<< HEAD
     def search(self, node):
         """
         Given a node's key returns that node
@@ -76,6 +80,8 @@ class BinaryTree:
         return print(f"Node {node} does not exist in this binary tree.")
                 
 
+=======
+>>>>>>> 62e7fe04f998b2f42a5741ffcd06b13dfdacd136
 
 def example():
     t = BinaryTree()
@@ -95,16 +101,27 @@ def example():
     t.insert(14, n7)
     t.insert(15, n7)
     t.insert(16, n8)
+<<<<<<< HEAD
     t.search(1)
     t.search(16)
     t.search(15)
+=======
+>>>>>>> 62e7fe04f998b2f42a5741ffcd06b13dfdacd136
 
     print(t.root.right.right.key)
     print(t.root.left.left.left.key)
     print(t.root.left.left.right.key)
     print(t.root.right.right.right.key)
     print(t.root.left.left.left.left.key)
+<<<<<<< HEAD
     print(t.root.right.parent.key)
 
 if __name__ == "__main__":
     example()
+=======
+    
+
+
+if __name__ == "__main__":
+    example()
+>>>>>>> 62e7fe04f998b2f42a5741ffcd06b13dfdacd136
