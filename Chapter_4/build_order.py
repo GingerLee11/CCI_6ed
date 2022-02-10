@@ -4,6 +4,8 @@
 
 import unittest
 
+from collections import deque
+
 
 class ProjectNode:
     def __init__(self, project):
@@ -17,7 +19,7 @@ def build_order(projects, dependecies):
     Returns the order in which the projects must be completed based on the dependecies.
     """
 
-    build_path = []
+    build_queue = deque()
 
     for project in projects:
         node = ProjectNode(project)
@@ -26,34 +28,38 @@ def build_order(projects, dependecies):
             if dependency[1] == node.project:
                 node.dependencies.append(dependency[0])
 
-        build_path.append(node)
+        build_queue.append(node)
     
-    # This is the final build order that will be returned. 
-    # Set data structure is used to avoid repetiton
-    # (Might be changed depending on the nature of the implementation)
-    project_build_order = set()
-    for project in build_path:
+    project_build_order = []
+    
+    # Append projects with no dependencies, 
+    # if there are no projects with no dependencies, 
+    # then there is no valid build order; return error.
+    i = 0
+    for k in range(len(projects)):
+        project = build_queue[i]
         if project.dependencies == []:
-            build_path.remove(project)
-            project_build_order.add(project.project)
+            build_queue.remove(project)
+            project_build_order.append(project.project)
+        else:
+            i += 1
 
-    # If no items are added that means that all projects have dependencies, which we lead to circular dependecies
-    # This doesn't catch all of the adge cases, but it should help
     if project_build_order == []:
         return print("Error. Invalid build order. Circular dependencies.")
 
-    # Add the rest of the projects in order based on dependencies
-    while len(project_build_order) < len(projects):
-        for project in build_path:
-            if project.dependencies == []:
-                    project_build_order.add(project.project)
-            for dependency in project.dependencies:
-                
-                if dependency not in project_build_order:
-                    pass
-                else:
-                    project_build_order.add(project.project)
-    
+
+    # Go through all the projects in order of dependencies
+    while len(build_queue) != 0:
+        project = build_queue.popleft()
+
+        # Go trough all the projects and only append projects after their dependents
+        for dependency in project.dependencies:
+            if dependency not in project_build_order:
+                if project not in build_queue:
+                    build_queue.append(project)
+            elif project.project not in project_build_order:
+                project_build_order.append(project.project)
+
     return project_build_order
 
 
@@ -63,7 +69,7 @@ class Test(unittest.TestCase):
 
     dependencies = [('a', 'd'), ('f', 'b'), ('b', 'd'), ('f', 'a'), ('d', 'c')]
 
-    output = {'e', 'f', 'a', 'b', 'd', 'c'}
+    output = ['e', 'f', 'a', 'b', 'd', 'c']
 
 
     def test_build_order(self):
