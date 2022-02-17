@@ -4,6 +4,8 @@
 
 from collections import deque
 
+import unittest
+
 def convert_to_decimal(binary_number):
     """
     Takes in a binary number as a string and converts it to decimal number.
@@ -47,7 +49,24 @@ def insertion(N, M, i, j):
 
     N = convert_to_binary(N)
 
-    return print(N)
+    return N
 
 
-insertion(10000000000, 10011, 2, 6)
+class Test(unittest.TestCase):
+
+    tests = [
+        (10000000000, 10011, 2, 6, "10001001100"),
+        (10000000000, 10011, 3, 7, "10010011000"),
+        (10000000000, 10011, 4, 8, "10100110000"),
+        (10000000000, 10011, 5, 9, "11001100000"),
+    ]
+
+    def test_insertion(self):
+        for N, M, i, j, expected in self.tests:
+            actual = insertion(N, M, i, j)
+            print(f"Actual:   {actual}\nExpected: {expected}")
+            assert actual == expected
+
+
+if __name__ == "__main__":
+    unittest.main()
