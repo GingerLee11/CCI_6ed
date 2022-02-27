@@ -32,8 +32,8 @@ class JukeBox:
             current = current.next
 
     def __str__(self):
-        values = [str(x) for x in self.all_songs]
-        return " <--> ".join(values)
+        song = [str(x.song) for x in self.all_songs]
+        return " <--> ".join(song)
 
     def __len__(self):
         result = 0
@@ -159,17 +159,20 @@ def example():
     jukebox.play_random_song()
     
 
-    for x in range(20):
+    for x in range(15):
         jukebox.play_next()
 
-    for x in range(20):
+    for x in range(15):
         jukebox.play_prev()
 
-    for x in range(100):
+    for x in range(10):
         jukebox.play_next()
         jukebox.play_random_song()
         jukebox.play_prev()
         jukebox.play_random_song()
+
+    print(jukebox)
+
 
 
 if __name__ == "__main__":
