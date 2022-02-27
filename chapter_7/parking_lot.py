@@ -3,6 +3,7 @@
 # with a required number of handicap spots.
 
 from collections import deque
+from re import S
 
 import unittest
 
@@ -110,11 +111,13 @@ class ParkingLot:
             # If all the parking spots are full, 
             # append the car to the queue
             self.queue_to_enter.append(car)
-            return print(f"""
+            if len(self.queue_to_enter) > 10:
+                return print(f"""
                 The parking lot is currently full.
                 Please wait in the queue.
                 There are {len(self.queue_to_enter) - 1} cars ahead in the queue.
                 """)
+            
         else:
             return print(f"There are no parking spots for {car.type} vehicles in this parking lot.")
 
@@ -125,7 +128,7 @@ class ParkingLot:
         Checks to see if there are available spots, if not the car is put into a queue.
         """
         if self.full_spots >= self.max_capacity:
-            self.queue_to_enter.append(car)
+            self.queue_to_enter.append(car)    
             return print(f"""
                 The parking lot is currently full.
                 Please wait in the queue.
@@ -136,8 +139,9 @@ class ParkingLot:
                 parking_spot_id = self._search_for_spot(car, self.handicap_parking_spots_dict)
             else:
                 parking_spot_id = self._search_for_spot(car, self.parking_spots_dict)
-            
-        return parking_spot_id
+        
+            if parking_spot_id != None:
+                return print(f"{car.name} is parked in parking spot {parking_spot_id}.")
 
     def _search_for_car(self, parking_spot, parking_dict):
         """
@@ -156,15 +160,16 @@ class ParkingLot:
 
 
     def _enter_from_queue(self):
-        inital_queue_len = len(self.queue_to_enter)
         checked = []
+        
 
         while len(self.queue_to_enter) != 0:
             
             # To prevent an infinite loop
-            if len(checked) >= inital_queue_len:
+            if len(checked) >= (self.max_capacity - self.full_spots) or len(checked) > len(self.queue_to_enter):
                 break
             car = self.queue_to_enter.popleft()
+            checked.append(car)
             self.enter(car)
 
 
@@ -177,19 +182,25 @@ class ParkingLot:
 
         if parking_spot_id < len(self.all_parking_spots) - 1:
             parking_spot = self.all_parking_spots[parking_spot_id - 1]
+            car_leaving = parking_spot.car
+            # Removes the relationship from parking_spot, all_parking_spots and dict
             self.all_parking_spots[parking_spot_id - 1].car = None
+            self.full_spots -= 1
         else:
             return print(f"{parking_spot_id} is not a valid parking spot id.")
-
+        
+        '''
         if parking_spot.handicap == True:
             car_leaving = self._search_for_car(parking_spot, self.handicap_parking_spots_dict)
         else:
             car_leaving = self._search_for_car(parking_spot, self.parking_spots_dict)
-
-        if len(self.queue_to_enter) != 0:
-            self._enter_from_queue(self)
+        '''
         
-        return car_leaving.name
+        if len(self.queue_to_enter) != 0:
+            self._enter_from_queue()
+        
+        if car_leaving != None:
+            return print(f"{car_leaving.name} is leaving the lot. \nParking spot {parking_spot_id} is now open.")
 
     
 def example():
@@ -203,8 +214,6 @@ def example():
         handicap = False
         if x % 25 == 0:
             handicap = True
-        if x % 12 == 0:
-            type = 'compact'
         if x % 10 == 0:
             type = 'electric'
 
@@ -218,25 +227,30 @@ def example():
 
 
 
-    for x in range(1, 125):
+    for x in range(1, 150):
         type = 'automobile'
         handicap = False
         if x % 25 == 0:
             handicap = True
-        if x % 12 == 0:
-            type = 'compact'
         if x % 10 == 0:
             type = 'electric'
 
         car = Car(f'Car {x}', type, handicap)
-        print(parking_lot.enter(car))
+        parking_lot.enter(car)
 
-        if x % 30 == 0:
+        if x % 15 == 0:
+            if x > 100:
+                x = 99
             random_parking_spot = randint(1, x)
-            print(parking_lot.leave(random_parking_spot))
+            parking_lot.leave(random_parking_spot)
+
+    for x in range(1, 145):
+        if x > 100:
+            x = 99
+        random_parking_spot = randint(1, x)
+        parking_lot.leave(random_parking_spot)
         
-    
-        
+    parking_lot.enter(car)
 
 if __name__ == "__main__":
     example()
