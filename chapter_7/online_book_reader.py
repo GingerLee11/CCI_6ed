@@ -115,8 +115,46 @@ class Book:
         return print(f"Thank you for reading {self.title}.\nYou are currently on page {self.curr_page.page_num}.\n")
 
 
+class BookShelf:
+    all_books = []
+
+    def __init__(self):
+        self.num_books = 0
+        
+    def add_book(self, book):
+        self.all_books.append(book)
+        self.num_books += 1
+
+        return print(f"Added {book.title} to the book shelf.")
+
+    def remove_book(self, book_title):
+        for indx, book in enumerate(self.all_books):
+            if book.title == book_title:
+                removed_book = self.all_books.pop(indx)
+                self.num_books -= 1
+                break
+            
+        return print(f"{removed_book.title} removed from book shelf.")
+
+    def display_books(self):
+        print(f"Book shelf contents: ")
+        for book in self.all_books:
+            print(f"Title: {book.title}")
+            print(f"Author: {book.author}")
+            print(f"Number of pages: {book.num_pages}")
+
+    def num_of_books(self):
+        return print(f"There are {self.num_books} books in the bookshelf.")
+
+    
+
+
+
+
+
 def example():
     i = 0
+    book_shelf = BookShelf()
     book_content = []
     for x in range(1, 300):
         content = f'Page {x}'
@@ -126,16 +164,27 @@ def example():
 
         page = Page(content, x)
         book_content.append(page)
+
+
+    for x in range(1, 11):
+
+        book = Book(f'Author {x}', f'Title {x}', len(book_content), book_content)
+        book.open_book()
+        print(book.next_page())
+        print(book.next_page())
+        print(book.next_chapter())
+        print(book.flip_to_page(123))
+        print(book.prev_page())
+        print(book.prev_chapter())
+        book.close_book()
+
         
-    book = Book('Author', 'Title', len(book_content), book_content)
-    book.open_book()
-    print(book.next_page())
-    print(book.next_page())
-    print(book.next_chapter())
-    print(book.flip_to_page(123))
-    print(book.prev_page())
-    print(book.prev_chapter())
-    book.close_book()
+        book_shelf.add_book(book)
+    
+    book_shelf.display_books()
+    book_shelf.remove_book('Title 4')   
+    book_shelf.display_books()
+    book_shelf.num_of_books()
 
 
 if __name__ == "__main__":
