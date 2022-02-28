@@ -146,6 +146,31 @@ class BookShelf:
     def num_of_books(self):
         return print(f"There are {self.num_books} books in the bookshelf.")
 
+    def search_for_book_by_title(self, book_title):
+        """
+        Searches through bookshelf for title that matches and returns the book object.
+        
+        Ex: title_1 = book_shelf.search_for_book_by_title('Title 1')
+        """
+        for book in self.all_books:
+            if book.title == book_title:
+                found_book = book
+                return found_book
+        return print(f"{book_title} was not found in this book shelf.")
+
+    def search_for_books_by_author(self, book_author):
+        """
+        Searches through bookshelf for title that matches and returns a list of books by that author.
+        
+        Ex: title_1 = book_shelf.search_for_book_by_title('Title 1')
+        """
+        books_by_author = []
+        for book in self.all_books:
+            if book.author == book_author:
+                books_by_author.append(book)
+        if len(books_by_author) != 0:        
+            return books_by_author
+        return print(f"There were no books found written by {book_author} in this book shelf.")
     
 
 
@@ -180,11 +205,21 @@ def example():
 
         
         book_shelf.add_book(book)
-    
+
+    book_11 = Book('Author 2', 'Title 11', len(book_content), book_content)
+    book_12 = Book('Author 2', 'Title 12', len(book_content), book_content)
+    book_shelf.add_book(book_11)
+    book_shelf.add_book(book_12)
+
     book_shelf.display_books()
     book_shelf.remove_book('Title 4')   
     book_shelf.display_books()
     book_shelf.num_of_books()
+    title_7 = book_shelf.search_for_book_by_title('Title 7')
+    author_2_books = book_shelf.search_for_books_by_author('Author 2')
+    print("Books written by Author 2:")
+    for book in author_2_books:
+        print(f"{book.title}")
 
 
 if __name__ == "__main__":
