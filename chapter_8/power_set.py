@@ -2,30 +2,31 @@
 # power_set.py - Given a set, returns all the subsets within that set.
 
 
-def power_set(given_set, all_subsets=None):
+def power_set(given_set):
     """
     Given a set, returns all the subsets within that set.
     """
-    if all_subsets == None:
-        all_subsets = []
+    all_subsets = [[]]
 
-    subset = set()
-    # Iterate through all the
-    for elem in given_set:
-        subset.add(elem)
-        if subset not in all_subsets:
-            all_subsets.append(subset)
-        
-        # remove current elem and return the rest of the set
-        given_set.remove(elem)
-        power_set(given_set, all_subsets)
-        given_set.add(elem)
+    def get_subsets(current_set, remaining_set):
+        # base case
+        if len(remaining_set) == 0:  
+            return
 
-    
+        # Iterate and recurse through each element
+        for i in range(len(remaining_set)):
+            if current_set + [remaining_set[i]] not in all_subsets:
+                all_subsets.append(current_set + [remaining_set[i]])
+                # This will return the last appended subset as the current set
+                # And the remaining set as one less than before
+                get_subsets(current_set + [remaining_set[i]], remaining_set[i + 1 :])
+            
+
+    get_subsets([], given_set)
     return all_subsets
 
 
-test_set = set('abc')
+test_set = list('abcde')
 
 if __name__ == "__main__":
     print(power_set(test_set))
