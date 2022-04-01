@@ -31,9 +31,12 @@ def get_paren_combos(paren, left, right, all_paren_combos):
         # Base Case: 
         if left_count == 0 and right_count == 0:
             if paren not in all_paren_combos:
-                all_paren_combos.append(paren)
+                if len(all_paren_combos) == 0:
+                    all_paren_combos.append(paren)
+                elif len(paren) == len(all_paren_combos[0]):
+                    all_paren_combos.append(paren)
         else:
-            get_paren_combos(paren[i] + paren[2 * i], left - 1, right - 1, all_paren_combos)
+            get_paren_combos(paren[: i] + paren[-i :], left - 1, right - 1, all_paren_combos)
         
 
 
@@ -41,3 +44,4 @@ if __name__ == "__main__":
     print(parens(1))
     print(parens(2))
     print(parens(3))
+    print(parens(4))
