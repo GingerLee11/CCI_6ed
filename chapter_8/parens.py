@@ -36,7 +36,7 @@ def get_paren_combos(paren, left, right, all_paren_combos):
                 elif len(paren) == len(all_paren_combos[0]):
                     all_paren_combos.append(paren)
         else:
-            get_paren_combos(paren[: i] + paren[-i :], left - 1, right - 1, all_paren_combos)
+            get_paren_combos(all_paren_combos[0][i : -i], left - 1, right - 1, all_paren_combos)
         
 
 
