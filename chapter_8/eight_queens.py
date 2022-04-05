@@ -170,8 +170,8 @@ class Chess:
         """
         board = self.board
         letters = self.letters
-        space = '    '
-        space_2 = '   '
+        space = '  '
+        space_2 = ' '
         top_of_board = f"  "
         for letter in letters:
             top_of_board += f"{space}{letter}{space_2}"
@@ -201,12 +201,13 @@ class Chess:
         row = 0
 
         for col in range(len(board[0]) -1, 0, -1):
-            if len(self.queens) != 0:
-                self.clear_queens()
-            square = board[col][row]
-            square.piece = 'Q'
-            self.queens.append(square)
-            self.find_spots_for_queens(num_queens, col)
+            for row in range(len(board) -1):
+                if len(self.queens) != 0:
+                    self.clear_queens()
+                square = board[col][row]
+                square.piece = 'Q'
+                self.queens.append(square)
+                self.find_spots_for_queens(num_queens, col)
 
 
     def find_spots_for_queens(self, num_queens, starting_col):
@@ -216,14 +217,16 @@ class Chess:
         cols = [y for y in range(len(self.board[0]))]
         rows = [x for x in range(len(self.board))]
 
-        backwards_cols = cols[starting_col::-2]
-        forward_cols = [col for col in cols if col not in backwards_cols] 
+        # backwards_cols = cols[starting_col:]
+        # forward_cols = [col for col in cols if col not in backwards_cols] 
 
         
         while len(self.queens) < num_queens:
-            last_row = 0
-            for col in (backwards_cols + forward_cols):
-                for row in rows[last_row :] + rows[: last_row]:
+            # last_row = 0
+            for col in (cols[starting_col::-1] + cols[:starting_col: -1]):
+                count = 0
+                # for row in rows[last_row :] + rows[: last_row]:
+                for row in rows:
                     square = self.board[col][row]
                     if square.piece == 'Q':
                         break
@@ -231,17 +234,27 @@ class Chess:
                         has_queen = self.check_option(option, square)
                         if has_queen == True:
                             break
-                    
+
                     if has_queen == True:
+                        # If the program gets stuck in an infinite loop
+                        # Remove queens until a placements can be found
+                        if len(self.queens) > 1:
+                            count += 1
+                            if count >= 8:
+                                while len(self.queens) != 1:
+                                    last_queen = self.queens.pop()
+                                    last_queen.piece = None
                         continue
                     elif has_queen == False:
                         square.piece = 'Q'
                         self.queens.append(square)
-                        last_row = row
+                        # last_row = row
                         break
-
-
-        self.print_board()
+                print(len(self.queens))
+                if len(self.queens) == num_queens:
+                    self.print_board()
+                    break
+        
 
     def check_option(self, option, square):
         """
@@ -258,6 +271,7 @@ class Chess:
     def clear_queens(self):
         for square in self.queens:
             square.piece = None
+        self.queens = []
 
 
 
