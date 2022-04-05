@@ -198,43 +198,48 @@ class Chess:
         Prints out all the possible positions that eight queens could inhabit on a chess board.
         """
         board = self.board
-        column_H = len(board[0]) - 1
         row = 0
 
-        while row < len(board) - 1:
+        for col in range(len(board[0]) -1, 0, -1):
             if len(self.queens) != 0:
                 self.clear_queens()
-            square = board[column_H][row]
+            square = board[col][row]
             square.piece = 'Q'
             self.queens.append(square)
-            self.find_spots_for_queens(num_queens)
+            self.find_spots_for_queens(num_queens, col)
 
-            row += 1
 
-    def find_spots_for_queens(self, num_queens):
+    def find_spots_for_queens(self, num_queens, starting_col):
         """
         Iterates though all the possible spots that the eight queens could go.
         """
-        cols = [y for y in range(len(self.board[0]) - 2)]
+        cols = [y for y in range(len(self.board[0]))]
+        rows = [x for x in range(len(self.board))]
 
+        backwards_cols = cols[starting_col::-2]
+        forward_cols = [col for col in cols if col not in backwards_cols] 
+
+        
         while len(self.queens) < num_queens:
-
-            col = cols.pop()
-            for row in range(len(self.board) - 1):
-                square = self.board[col][row]
-                if square.piece == 'Q':
-                    break
-                for option in square.possible_options:
-                    has_queen = self.check_option(option, square)
-                    if has_queen == True:
+            last_row = 0
+            for col in (backwards_cols + forward_cols):
+                for row in rows[last_row :] + rows[: last_row]:
+                    square = self.board[col][row]
+                    if square.piece == 'Q':
                         break
-                
-                if has_queen == True:
-                    continue
-                else:
-                    square.piece = 'Q'
-                    self.queens.append(square)
-                    break
+                    for option in square.possible_options:
+                        has_queen = self.check_option(option, square)
+                        if has_queen == True:
+                            break
+                    
+                    if has_queen == True:
+                        continue
+                    elif has_queen == False:
+                        square.piece = 'Q'
+                        self.queens.append(square)
+                        last_row = row
+                        break
+
 
         self.print_board()
 
@@ -245,7 +250,7 @@ class Chess:
         # Bases Cases:
         if option == None:
             return False
-        if option == 'Q':
+        if option.piece == 'Q':
             return True
         next_sqaure = option.opposites[square]
         return self.check_option(next_sqaure, option)
@@ -254,5 +259,14 @@ class Chess:
         for square in self.queens:
             square.piece = None
 
+
+
+def example():
+
+
+    chess_board = Chess()
+    chess_board.eight_queens(8)
+
     
-    
+if __name__ == "__main__":
+    example()
