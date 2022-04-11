@@ -31,10 +31,17 @@ def group_anagrams_dict(array):
     """
     anagram_dict = {}
     for string in array:
-        if frozenset(string) in anagram_dict:
-            anagram_dict[frozenset(string)].append(string)
-        elif frozenset(string) not in anagram_dict:
-            anagram_dict[frozenset(string)] = [string]
+
+        # Created a sorted key that will be the same for all words 
+        key = ''.join(sorted(string))
+
+
+        if key in anagram_dict.keys():
+            if string not in anagram_dict[key]:
+                anagram_dict[key].append(string)
+
+        elif key not in anagram_dict.keys():
+            anagram_dict[key] = [string]
         
     return anagram_dict
 
@@ -3389,7 +3396,9 @@ def example():
 
     all_anagrams = group_anagrams_dict(list_of_strings)
     for value in all_anagrams.values():
-        print(value)
+        if len(value) > 1:
+            print(value)
+
 
 if __name__ == "__main__":
     example()
