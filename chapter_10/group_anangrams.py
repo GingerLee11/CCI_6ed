@@ -7,7 +7,7 @@ from collections import deque
 
 def group_anagrams(array):
     """
-    Sorts an array of strings and only return strings that have anagrams within the list.
+    Sorts an array of strings by grouping them by anagrams.
     """
     helper = []
     for string in array:
@@ -22,9 +22,21 @@ def group_anagrams(array):
                 if string_1 not in helper:
                     helper.append(string_1)
 
-  
-    
     return helper
+
+
+def group_anagrams_dict(array):
+    """
+    Sorts all the anagrams into a dictionary.
+    """
+    anagram_dict = {}
+    for string in array:
+        if frozenset(string) in anagram_dict:
+            anagram_dict[frozenset(string)].append(string)
+        elif frozenset(string) not in anagram_dict:
+            anagram_dict[frozenset(string)] = [string]
+        
+    return anagram_dict
 
 
 def example():
@@ -3375,9 +3387,9 @@ def example():
     print(len(list_of_strings))
 
 
-    all_anagrams = group_anagrams(list_of_strings)
-    print(all_anagrams)
-
+    all_anagrams = group_anagrams_dict(list_of_strings)
+    for value in all_anagrams.values():
+        print(value)
 
 if __name__ == "__main__":
     example()
