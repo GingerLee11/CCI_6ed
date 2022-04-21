@@ -7,16 +7,7 @@ def find_duplicates(array):
     """
     Find duplicates in an array that may range anywhere from 0 to 32000.
     """
-    max_num = max(array)
-    min_num = min(array)
-
-    while min_num != array[0] and max_num != array[-1]:
-        last = -10000
-        for indx, curr in enumerate(array):
-            if last > curr:
-                array[indx - 1] = curr
-                array[indx] = last
-            last = curr
+    array = sorted(array)
 
     last = None
     for curr in array: 
@@ -27,13 +18,13 @@ def find_duplicates(array):
 
 def example():
 
-    upper_bound = randint(1, 100)
+    upper_bound = randint(1, 32000)
     test_array = [x for x in range(1, upper_bound)]
-    """
-    for x in range(10):
+    
+    for x in range(20):
         num = randint(1, upper_bound)
         test_array.append(num)
-    """
+    
     shuffle(test_array)
 
     find_duplicates(test_array)
