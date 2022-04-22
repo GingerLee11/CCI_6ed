@@ -4,6 +4,7 @@
 # A valley is defined as when an integer is adjacent to only integers that are greater than or equal to it.
 
 import unittest
+from random import randint
 
 def peaks_and_valleys(array):
     """
@@ -12,11 +13,10 @@ def peaks_and_valleys(array):
     A valley is defined as when an integer is adjacent to only integers that are greater than or equal to it.
     """
     p_and_v_check = [False for x in range(len(array))]
-
     while False in p_and_v_check:
         
         for indx, num in enumerate(array):
-
+        
             # Break out of loop if all elems are True
             if False not in p_and_v_check:
                 break
@@ -103,17 +103,14 @@ def peaks_and_valleys(array):
 
                     elif num <= array[indx + 1] and num <= array[indx - 1]:
                         p_and_v_check[indx] = True    
-
     return array
 
 
 def example():
 
-    test_array = [5, 8, 6, 2, 3, 4, 6]
-    v_and_p_array = [5, 8, 2, 6, 3, 6, 4]
-
-    print(peaks_and_valleys(test_array))
-    print(peaks_and_valleys(v_and_p_array))
+    test_array = [randint(0, 1000000) for x in range(10000)]
+    
+    peaks_and_valleys(test_array)
 
 
 class Test(unittest.TestCase):
@@ -121,10 +118,14 @@ class Test(unittest.TestCase):
     test_arrays = [
         [5, 8, 6, 2, 3, 4, 6],
         [5, 8, 2, 6, 3, 6, 4],
+        [1, 1, 1, 1, 1, 1, 1],
+        [10, 12, 13, 14, 15, 16],
     ]
     peak_and_valley_arrays = [
         [8, 5, 6, 2, 4, 3, 6],
         [8, 2, 6, 3, 6, 4, 5],
+        [1, 1, 1, 1, 1, 1, 1],
+        [12, 10, 14, 13, 16, 15],
     ]
 
     def test_peaks_and_valleys(self):
