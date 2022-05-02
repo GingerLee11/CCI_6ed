@@ -12,17 +12,21 @@ def factorial_zero(n):
         return 0
     fact_num = str(factorial(n))
     count = 0
-    for i in fact_num:
+    for i in reversed(fact_num):
         if i != '0':
-            count = 0
+            return count
         elif i == '0':
             count += 1
     return count
 
 
 def example():
-
-    print(factorial_zero(100000))
+    tests_10 = [10, 100, 1000, 10000, 100000]
+    tests_8 = [8, 64, 512, 4096, 32768]
+    for n in tests_10:
+        print(factorial_zero(n))
+    for n in tests_8:
+        print(factorial_zero(n))
 
 
 class Test(unittest.TestCase):
@@ -33,6 +37,7 @@ class Test(unittest.TestCase):
         (-1, 0),
         (0, 0),
         (10, 2),
+        (100000, 24999),
     ]
     
     def test_factorial_zeros(self):
