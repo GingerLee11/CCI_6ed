@@ -21,8 +21,8 @@ def factorial_zero(n):
 
 
 def example():
-    for x in range(100):
-        print(factorial_zero(x))
+
+    print(factorial_zero(100000))
 
 
 class Test(unittest.TestCase):
