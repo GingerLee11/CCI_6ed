@@ -38,6 +38,8 @@ class Test(unittest.TestCase):
 
     test_squares = [
         [((2, 8), 2), ((8, 3), 2), [(3, 7), (9, 2)]],
+        [((2, 8), 6), ((8, 3), 10), [(5, 5), (13, -2)]],
+        [((-2, -11), 4), ((8, 15), 20), [(0, -13), (18, 5)]],
     ]
     
     def generate_square(self, test_square):
