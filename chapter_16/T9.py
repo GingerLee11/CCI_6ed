@@ -54,29 +54,6 @@ def numeric_search(numbers, valid_words, num_to_letters_dict):
     return set(possible_words)
 
 
-def example():
-
-    num_to_letters_dict = {
-        '2': ['a', 'b', 'c'], 
-        '3': ['d', 'e', 'f'], 
-        '4': ['g', 'h', 'i'], 
-        '5': ['j', 'k', 'l'], 
-        '6': ['m', 'n', 'o'], 
-        '7': ['p', 'q', 'r', 's'], 
-        '8': ['t', 'u', 'v'], 
-        '9': ['w', 'x', 'y', 'z'], 
-    }
-    english_trie = EnglishLanguageTrie()
-    english_words = english_words_lower_alpha_set
-    for word in english_words:
-        english_trie.add_word(word)
-    english_trie.add_word('used')
-
-    
-    numbers = '8733'
-    print(numeric_search(numbers, english_trie, num_to_letters_dict))
-
-
 class Test(unittest.TestCase):
 
     def set_up_data_structures(self, words):
