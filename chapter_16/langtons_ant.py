@@ -53,13 +53,6 @@ class Square:
         return possible_options
       
 
-class Ant:
-
-    def __init__(self, position):
-        self.direction = 0
-        self.position = position
-
-
 class LangtonsAnt:
 
     def __init__(self, N):
@@ -190,7 +183,7 @@ class LangtonsAnt:
         pos = f"{y}{x}"
         # Find the initial position for the ant
         square = self.position_dict[pos]
-        ant = Ant(pos)
+        ant = 0
 
         # Move the ant K moves
         for i in range(k):
@@ -207,26 +200,25 @@ class LangtonsAnt:
 
             if square.color == 'W':
                 square.color = 'B'
-                ant.direction -= 90
+                ant -= 90
                 # To check if the ant has gone full circle to speak
-                if ant.direction == 360 or ant.direction == -360:
-                    ant.direction = 0
-                
-                square.has_ant = False
+                if ant == 360 or ant == -360:
+                    ant = 0
 
+                square.has_ant = False
                 # The ants moves to the next square
-                square = square.adj_squares_dict[ant.direction]
+                square = square.adj_squares_dict[ant]
             
             elif square.color == 'B':
                 square.color = 'W'
-                ant.direction += 90
+                ant += 90
                 # To check if the ant has gone full circle to speak
-                if ant.direction == 360 or ant.direction == -360:
-                    ant.direction = 0
+                if ant == 360 or ant == -360:
+                    ant = 0
                 
                 square.has_ant = False
                 # The ants moves to the next square
-                square = square.adj_squares_dict[ant.direction]
+                square = square.adj_squares_dict[ant]
 
 
 def example():
