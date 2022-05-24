@@ -2,6 +2,7 @@
 # calculator.py - Given an arithmetic expression (without parentheses) return the result of that expression
 
 import re
+from collections import deque
 import unittest
 
 def mult_two(x, y):
@@ -34,15 +35,12 @@ def perform_operation(expression, regex, operation):
     """
     result = 0
     mo = ''
-    # When there are no more matches, 
-    # that means that the expression has been evaluated
-    # for that operation
-    #while mo != None:
+
     mo = re.search(regex, expression)
     if mo != None:
         result = str(operation(float(mo.group(1)), float(mo.group(2))))
         expression = re.sub(regex, result, expression, count=1)
-    
+
     return expression
 
 
@@ -50,48 +48,50 @@ def calculator(expression):
     """
     Given an arithmetic expression (without parentheses) return the result of that expression
     """
-    
+    operation_queue = deque()
+
+    m_and_d_dict = {
+        '*': 'm',
+        '/': 'd',
+    }
+    a_and_s_dict = {
+        '+': 'a',
+        '-': 's',
+    }
+    # Add the queues for order of operations
+    for char in expression:
+        if char in m_and_d_dict:
+            operation_queue.append(m_and_d_dict[char])
+
+    for char in expression:
+        if char in a_and_s_dict:
+            operation_queue.append(a_and_s_dict[char])
+        
 
     # Define the patterns to match
-    multi_regex = re.compile(r'(\d*[.]?\d*)\*(\d*[.]?\d*)')
+    mult_regex = re.compile(r'(\d*[.]?\d*)\*(\d*[.]?\d*)')
     divide_regex = re.compile(r'(\d*[.]?\d*)\/(\d*[.]?\d*)')
     add_regex = re.compile(r'(\d*[.]?\d*)\+(\d*[.]?\d*)')
     subtract_regex = re.compile(r'(\d*[.]?\d*)\-(\d*[.]?\d*)')
 
     # Oder of operations dictionaries has the regex as the keys and the function as the values
-    mult_and_divide = {
-        multi_regex: mult_two,
-        divide_regex: divide_two,
+    order_of_operations = {
+        'm': [mult_regex, mult_two],
+        'd': [divide_regex, divide_two],
+        'a': [add_regex,  add_two],
+        's': [subtract_regex, subtract_two],
     }
-    mult_div = re.compile(r'[*/]')
 
-    add_and_subtract = {
-        add_regex: add_two,
-        subtract_regex: subtract_two,
-    }
-    add_sub = re.compile(r'[+-]')
+    while len(operation_queue) != 0:
 
-    # Checks to make sure there aren't any unevaluated division or multiplication operators in the expression
-    mult_div_check = re.search(mult_div, expression)
-
-    while mult_div_check != None:
+        # Execute an operation
+        op = operation_queue.popleft()
 
         # Goes through the operations following PEMDAS (parenthesis, exponent, division, addition, and subtraction)
-        for regex, operation in mult_and_divide.items():
+        regex, operation = order_of_operations[op]
 
-            expression = perform_operation(expression, regex, operation)
-            mult_div_check = re.search(mult_div, expression)
+        expression = perform_operation(expression, regex, operation)
 
-    # Checks to make sure there aren't any unevaluated division or multiplication operators in the expression
-    add_sub_check = re.search(add_sub, expression)
-
-    while add_sub_check != None:
-
-        # Goes through the operations following PEMDAS (parenthesis, exponent, division, addition, and subtraction)
-        for regex, operation in add_and_subtract.items():
-
-            expression = perform_operation(expression, regex, operation)
-            add_sub_check = re.search(add_sub, expression)
 
 
     return float(expression)
@@ -106,7 +106,8 @@ class Test(unittest.TestCase):
         ('2*3+18/6*3+15', 30),
         ('2*3*4/6+1+1-1+1', 6),
         ('3*3/4/5*2', 0.9),
-    ]
+        ('10-4/2*3+4*2', 12),
+        ]
     
     def test_calculator(self):
         for expression, expected in self.tests:
